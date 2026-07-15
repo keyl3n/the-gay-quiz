@@ -5,7 +5,7 @@ import boxen from "boxen";
 import readline from "readline";
 
 console.clear();
-console.log(boxen(chalk.bold('The Gay Quiz'), { padding: 1.75, margin: 2, borderStyle: 'double', borderColor: 'blueBright', title: 'AndySoft presents', float: true}));
+console.log(boxen(chalk.bold('The Gay Quiz'), { padding: 1.75, margin: 2, borderStyle: 'double', borderColor: 'blueBright', title: 'AndySoft presents', float: true }));
 
 // --- Emergency exit: 3 Ctrl+C presses within 1 second quits the script. ---
 let ctrlCTimes = [];
@@ -109,6 +109,50 @@ const questions = [
             'Twitter'
         ],
         points: [2, -1, -2, -4, 1, -1, 4, 4, 4]
+    },
+    {
+        type: 'select',
+        name: 'whichGame',
+        message: 'Which of these ROBLOX games sounds most enticing to you?',
+        choices: [
+            'Fem RNG',
+            'Crack Shade',
+            'Undress Shade to Impress',
+            'Homo Tycoon'
+        ],
+        points: [3, 6, 5, 4]
+    },
+    {
+        type: 'number',
+        name: 'minCash',
+        message: `What\'s the MINIMUM amount of money you would accept to get cracked?\n${chalk.gray('(You can choose anyone to crack you)')}\n${chalk.gray('(↑/↓: Increment by $100)')}`,
+        increment: 100,
+        min: 0,
+        max: 1000000000000,
+        points: [
+            { below: 1, points: 7 },
+            { below: 10, points: 6 },
+            { below: 100, points: 5 },
+            { below: 1000, points: 4 },
+            { below: 10000, points: 3 },
+            { below: 100000, points: 2 },
+            { below: 1000000, points: 1 }
+        ]
+    },
+    {
+        type: 'select',
+        name: 'whichGenre',
+        message: `What is the name of the genre that involves romantic and/or sexual relations between two or more men and is written by men?\n${chalk.gray('(You will receive points for getting this right)')}\n`,
+        choices: [
+            "Yaoi",
+            "Gei komi",
+            "MLM",
+            "Boy\'s love",
+            "Dih Reads 🥀"
+        ],
+        points: [
+            0, 5, 0, 0, 1
+        ]
     }
 ];
 
@@ -117,6 +161,7 @@ const questions = [
  * - select:      points[chosenIndex]
  * - multiselect: sum of points[i] for every selected index
  * - toggle:      points.active / points.inactive by the boolean value
+ * - number:      points[i].points of the first tier the answer is `below`
  * - anything else (open-ended, or no `points`): 0
  * @param {import('prompts').PromptObject & { points?: any }} q
  * @param {*} value the answer for this question
@@ -133,8 +178,10 @@ function scoreOf(q, value) {
         case 'toggle':
         case 'confirm':
             return value ? (q.points.active ?? 0) : (q.points.inactive ?? 0);
+        case 'number':
+            return q.points.find(tier => value < tier.below)?.points ?? 0;
         default:
-            return 0; // open-ended: number / text / date
+            return 0; // open-ended: text / date
     }
 }
 
@@ -143,6 +190,7 @@ function scoreOf(q, value) {
  * - select:      the highest single choice
  * - multiselect: every positive choice picked, negatives left alone
  * - toggle:      whichever side is worth more
+ * - number:      the richest tier
  * - anything else (open-ended, or no `points`): 0
  * @param {import('prompts').PromptObject & { points?: any }} q
  * @returns {number}
@@ -158,8 +206,10 @@ function maxScoreOf(q) {
         case 'toggle':
         case 'confirm':
             return Math.max(q.points.active ?? 0, q.points.inactive ?? 0);
+        case 'number':
+            return Math.max(...q.points.map(tier => tier.points));
         default:
-            return 0; // open-ended: number / text / date
+            return 0; // open-ended: text / date
     }
 }
 
@@ -186,7 +236,7 @@ async function askUntilAnswered(q) {
                     if (state.aborted || state.exited) userAborted = true;
                 }
             },
-            { onCancel: () => {true} } // handled; we decide what to do below
+            { onCancel: () => { true } } // handled; we decide what to do below
         );
 
         // A real answer was given.
