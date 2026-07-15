@@ -1,0 +1,20 @@
+{
+  "name": "the-gay-quiz",
+  "version": "1.0.0",
+  "description": "Are you gay? Cause I am",
+  "license": "ISC",
+  "author": "k3ylen",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "setup": "pnpm install",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "dependencies": {
+    "boxen": "^8.0.1",
+    "chalk": "^5.6.2",
+    "nanospinner": "^1.2.2",
+    "prompts": "^2.4.2"
+  }
+}
