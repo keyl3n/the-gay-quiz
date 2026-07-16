@@ -376,5 +376,3 @@ main().catch(err => {
     console.error(chalk.redBright(err.message));
     process.exit(1);
 });
-
-// test
