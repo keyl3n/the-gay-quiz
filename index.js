@@ -126,7 +126,7 @@ const questions = [
     {
         type: 'number',
         name: 'minCash',
-        message: `What\'s the MINIMUM amount of money you would accept to get cracked?\n${chalk.gray('(You can choose anyone to crack you)')}\n${chalk.gray('(↑/↓: Increment by $100)')}`,
+        message: `What's the MINIMUM amount of money you would accept to get cracked?\n${chalk.gray('(You can choose anyone to crack you)')}\n${chalk.gray('(↑/↓: Increment by $100)')}`,
         increment: 100,
         min: 0,
         max: 1000000000000,
@@ -148,7 +148,7 @@ const questions = [
             "Yaoi",
             "Gei komi",
             "MLM",
-            "Boy\'s love",
+            "Boy's love",
             "Dih Reads 🥀"
         ],
         points: [

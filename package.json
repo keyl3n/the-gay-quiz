@@ -9,12 +9,21 @@
   "scripts": {
     "start": "node index.js",
     "setup": "pnpm install",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "test": "node --check index.js && pnpx eslint .",
+    "lint": "pnpx eslint ."
   },
+  "packageManager": "pnpm@11.13.0",
   "dependencies": {
     "boxen": "^8.0.1",
     "chalk": "^5.6.2",
     "nanospinner": "^1.2.2",
     "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^2.0.1",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0"
   }
 }
