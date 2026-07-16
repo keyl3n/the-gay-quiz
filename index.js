@@ -289,6 +289,53 @@ async function askUntilAnswered(q) {
     }
 }
 
+/**
+ * Logs the custom message(s) for specific answers of specific questions.
+ * @param {import('prompts').PromptObject} question - The question object in the `questions` array
+ * @param {object} response - The response object from the user
+ */
+function customMessage(question, response) {
+    const messages = [
+        {
+            qName: 'politicalLean',
+            // we only need one of these for it to show a custom message
+            reqAnswers: ['Far-left', 'Far-right'],
+            msg: chalk.yellowBright('You aren\'t tuff lil bro')
+        },
+        {
+            qName: 'whatBodyType',
+            reqAnswers: ['Cub', 'Otter'],
+            msg: chalk.yellowBright('I know what you are...')
+        },
+        {
+            qName: 'favBl?',
+            reqAnswers: ['Jinx', 'Killing Stalking', 'Yarichin B Club'],
+            msg: chalk.yellowBright('Interesting... (not judging tho)')
+        },
+        {
+            qName: 'favBl?',
+            reqAnswers: ['Citrus'],
+            msg: chalk.yellowBright('That\'s girls love you idiot not boys love')
+        },
+        {
+            qName: 'favBl?',
+            reqAnswers: ['WHAT ARE THESE???'],
+            msg: chalk.yellowBright('You don\'t wanna know... oh the horrors...')
+        }
+    ];
+
+    const matches = messages.filter(m => m.qName == question.name);
+    if (matches.length === 0) return;
+
+    // select hands back the chosen index, multiselect an array of them.
+    const value = response[question.name];
+    const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
+
+    for (const m of matches) {
+        if (m.reqAnswers.some(a => answers.includes(a))) console.log(m.msg);
+    }
+}
+
 async function main() {
     let responses = [];
     let totalScore = 0;
@@ -310,21 +357,8 @@ async function main() {
             //console.log((points > 0 ? chalk.greenBright : chalk.redBright)(label));
         }
 
-        if (q.name == 'politicalLean' && ['Far-left', 'Far-right'].includes(questions.find(qu => qu.name == 'politicalLean').choices[response.politicalLean])) {
-            console.log(chalk.yellowBright('You aren\'t tuff lil bro'))
-        }
-        if (q.name == 'whatBodyType' && ['Cub', 'Otter'].includes(questions.find(qu => qu.name == 'whatBodyType').choices[response.whatBodyType])) {
-            console.log(chalk.yellowBright('I know what you are...'))
-        }
-        if (q.name == 'favBl?' && ["Jinx", "Killing Stalking", "Yarichin B Club"].includes(questions.find(qu => qu.name == 'favBl?').choices[response['favBl?']])) {
-            console.log(chalk.yellowBright('Interesting... (not judging tho)'))
-        }
-        if (q.name == 'favBl?' && ["Citrus"].includes(questions.find(qu => qu.name == 'favBl?').choices[response['favBl?']])) {
-            console.log(chalk.yellowBright('That\'s girls love you idiot not boys love'))
-        } 
-        if (q.name == 'favBl?' && ["WHAT ARE THESE???"].includes(questions.find(qu => qu.name == 'favBl?').choices[response['favBl?']])) {
-            console.log(chalk.yellowBright('You don\'t wanna know... oh the horrors...'))
-        }
+        customMessage(q, response);
+
         await wait(1000);
     }
 
