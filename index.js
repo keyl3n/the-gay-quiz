@@ -71,7 +71,7 @@ const questions = [
             'Claire'
         ],
         // Points for each selected choice are summed together.
-        points: [3, 3, 3, 3, 3, 3, 3, -3],
+        points: [3, 3, 3, 3, 3, 3, 3, 3, -3],
     },
     {
         type: 'select',
