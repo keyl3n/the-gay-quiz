@@ -63,6 +63,7 @@ const questions = [
             'Shade',
             'Stormy',
             'bmc',
+            'Wasshoi',
             'I_HaF',
             'phoenix',
             'LaziestDonut',
