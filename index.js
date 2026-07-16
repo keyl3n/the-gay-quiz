@@ -154,6 +154,40 @@ const questions = [
         points: [
             0, 5, 0, 0, 1
         ]
+    },
+    {
+        type: 'select',
+        name: 'whatBodyType',
+        message: 'What is your (gay) body type?',
+        choices: [
+            "Bear",
+            "Cub",
+            "Otter",
+            "Twink",
+            "None of the above fit me",
+        ],
+        points: [
+            2, 5, 5, 1, 0
+        ]
+
+    },
+    {
+        type: 'multiselect',
+        name: 'favBl?',
+        message: 'What is your favorite bl?',
+        choices: [
+            "Bj Alex",
+            "Jinx",
+            "Killing Stalking",
+            "Yarichin B Club",
+            "Haikyuu",
+            "Yuri on Ice",
+            "Citrus",
+            "WHAT ARE THESE???",
+        ],
+        points: [
+            2, 1, 1, 1, 0, 1, -5, 0
+        ]
     }
 ];
 
@@ -278,6 +312,18 @@ async function main() {
 
         if (q.name == 'politicalLean' && ['Far-left', 'Far-right'].includes(questions.find(qu => qu.name == 'politicalLean').choices[response.politicalLean])) {
             console.log(chalk.yellowBright('You aren\'t tuff lil bro'))
+        }
+        if (q.name == 'whatBodyType' && ['Cub', 'Otter'].includes(questions.find(qu => qu.name == 'whatBodyType').choices[response.whatBodyType])) {
+            console.log(chalk.yellowBright('I know what you are...'))
+        }
+        if (q.name == 'favBl?' && ["Jinx", "Killing Stalking", "Yarichin B Club"].includes(questions.find(qu => qu.name == 'favBl?').choices[response['favBl?']])) {
+            console.log(chalk.yellowBright('Interesting... (not judging tho)'))
+        }
+        if (q.name == 'favBl?' && ["Citrus"].includes(questions.find(qu => qu.name == 'favBl?').choices[response['favBl?']])) {
+            console.log(chalk.yellowBright('That\'s girls love you idiot not boys love'))
+        } 
+        if (q.name == 'favBl?' && ["WHAT ARE THESE???"].includes(questions.find(qu => qu.name == 'favBl?').choices[response['favBl?']])) {
+            console.log(chalk.yellowBright('You don\'t wanna know... oh the horrors...'))
         }
         await wait(1000);
     }
