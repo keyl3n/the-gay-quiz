@@ -13,7 +13,7 @@
     "test": "node --check index.js && pnpx eslint .",
     "lint": "pnpx eslint ."
   },
-  "packageManager": "pnpm@11.13.0",
+  "packageManager": "pnpm@11.20.0",
   "dependencies": {
     "boxen": "^8.0.1",
     "chalk": "^5.6.2",
