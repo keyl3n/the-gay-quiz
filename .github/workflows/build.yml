@@ -1,0 +1,96 @@
+name: build
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release, e.g. 2.1.0 (leave empty to only build)
+        required: false
+        type: string
+      prerelease:
+        description: Mark the release as a pre-release
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            out: thegayquiz-linux-x64
+          - os: macos-latest
+            out: thegayquiz-macos-arm64
+          - os: windows-latest
+            out: thegayquiz-win-x64.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: pnpm
+      - run: pnpm ci
+      - run: pnpm test
+      - run: pnpm exec esbuild index.js --bundle --platform=node --outfile=build/bundle.js
+      - run: node -e "require('fs').writeFileSync('sea-config.json', JSON.stringify({main:'build/bundle.js',output:'${{ matrix.out }}',disableExperimentalSEAWarning:true,useCodeCache:true}))"
+      - run: node --build-sea sea-config.json
+      - if: runner.os == 'macOS'
+        run: codesign --sign - ${{ matrix.out }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.out }}
+          path: ${{ matrix.out }}
+
+  release:
+    if: github.event_name == 'workflow_dispatch' && inputs.version != ''
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: v${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Build changelog from commits since last release
+        run: |
+          prev=$(gh release list --limit 1 --exclude-drafts --json tagName --jq '.[0].tagName // empty')
+          if [ -n "$prev" ]; then
+            echo "Previous release: $prev"
+            range="$prev..HEAD"
+            compare="**Full changelog:** ${{ github.server_url }}/${{ github.repository }}/compare/$prev...$TAG"
+          else
+            echo "No previous release, listing all commits"
+            range=""
+            compare=""
+          fi
+
+          {
+            echo "## Changes"
+            echo
+            git log --no-merges --reverse --pretty=format:'- %s (%h)' $range
+            echo
+            if [ -n "$compare" ]; then echo; echo "$compare"; fi
+          } > notes.md
+
+          cat notes.md
+
+      - name: Create release
+        run: |
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes-file notes.md \
+            --target "${{ github.sha }}" \
+            ${{ inputs.prerelease && '--prerelease' || '' }} \
+            artifacts/*
