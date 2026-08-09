@@ -15,10 +15,10 @@
   },
   "packageManager": "pnpm@11.20.0",
   "dependencies": {
+    "@clack/prompts": "^1.7.0",
     "boxen": "^8.0.1",
     "chalk": "^6.0.0",
-    "nanospinner": "^1.2.2",
-    "prompts": "^2.4.2"
+    "nanospinner": "^1.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,4 +1,4 @@
-import prompts from "prompts";
+import { select, multiselect, confirm, text, isCancel } from "@clack/prompts";
 import { createSpinner } from "nanospinner";
 import chalk from "chalk";
 import boxen from "boxen";
@@ -27,8 +27,27 @@ process.stdin.on('keypress', (_str, key) => {
 process.on('SIGINT', registerCtrlC);
 
 /**
+ * A single quiz question. `type` picks the @clack/prompts prompt to render and
+ * decides how `points` is read (see `scoreOf`).
+ * @typedef {object} Question
+ * @property {'select' | 'multiselect' | 'confirm' | 'number'} type
+ * @property {string} name
+ * @property {string} message
+ * @property {string[]} [choices] select/multiselect: the value of a choice is its index
+ * @property {boolean} [initial] confirm: which side starts selected
+ * @property {string} [active] confirm: label for `true`
+ * @property {string} [inactive] confirm: label for `false`
+ * @property {string} [placeholder] number: greyed-out hint shown while empty
+ * @property {number} [min] number
+ * @property {number} [max] number
+ * @property {(input: string) => string | undefined} [validate] number: return a
+ *   message to reject the input, or `undefined` to accept it
+ * @property {*} [points]
+ */
+
+/**
  * The inquiries that shall be inquired
- * @type {import('prompts').PromptObject[]}
+ * @type {Question[]}
  */
 const questions = [
     {
@@ -47,7 +66,7 @@ const questions = [
         points: [0, 1, 2, 4, 5, 8],
     },
     {
-        type: 'toggle',
+        type: 'confirm',
         name: 'likesBoys',
         message: 'Do you like BOYS?',
         initial: true,
@@ -92,7 +111,7 @@ const questions = [
         type: 'number',
         name: 'limit',
         message: `For each ${chalk.italic('y')}, ${chalk.italic('x')} is being divided by 2. What is the limit of ${chalk.italic('x')} as ${chalk.italic('y')} approaches ∞?`,
-        validate: a => a == '0' ? true : 'WRONG!!!'
+        validate: a => a.trim() === '0' ? undefined : 'WRONG!!!'
     },
     {
         type: 'multiselect',
@@ -126,8 +145,8 @@ const questions = [
     {
         type: 'number',
         name: 'minCash',
-        message: `What's the MINIMUM amount of money you would accept to get cracked?\n${chalk.gray('(You can choose anyone to crack you)')}\n${chalk.gray('(↑/↓: Increment by $100)')}`,
-        increment: 100,
+        message: `What's the MINIMUM amount of money you would accept to get cracked?\n${chalk.gray('(You can choose anyone to crack you)')}`,
+        placeholder: '100',
         min: 0,
         max: 1000000000000,
         points: [
@@ -143,7 +162,7 @@ const questions = [
     {
         type: 'select',
         name: 'whichGenre',
-        message: `What is the name of the genre that involves romantic and/or sexual relations between two or more men and is written by men?\n${chalk.gray('(You will receive points for getting this right)')}\n`,
+        message: `What is the name of the genre that involves romantic and/or sexual relations between two or more men and is written by men?\n${chalk.gray('(You will receive points for getting this right)')}`,
         choices: [
             "Yaoi",
             "Gei komi",
@@ -195,10 +214,10 @@ const questions = [
  * Score a single answer based on the question's `points` config.
  * - select:      points[chosenIndex]
  * - multiselect: sum of points[i] for every selected index
- * - toggle:      points.active / points.inactive by the boolean value
+ * - confirm:     points.active / points.inactive by the boolean value
  * - number:      points[i].points of the first tier the answer is `below`
  * - anything else (open-ended, or no `points`): 0
- * @param {import('prompts').PromptObject & { points?: any }} q
+ * @param {Question} q
  * @param {*} value the answer for this question
  * @returns {number}
  */
@@ -210,13 +229,12 @@ function scoreOf(q, value) {
             return q.points[value] ?? 0;
         case 'multiselect':
             return value.reduce((sum, i) => sum + (q.points[i] ?? 0), 0);
-        case 'toggle':
         case 'confirm':
             return value ? (q.points.active ?? 0) : (q.points.inactive ?? 0);
         case 'number':
             return q.points.find(tier => value < tier.below)?.points ?? 0;
         default:
-            return 0; // open-ended: text / date
+            return 0; // open-ended: text
     }
 }
 
@@ -224,10 +242,10 @@ function scoreOf(q, value) {
  * The best score a question can possibly award, mirroring `scoreOf`.
  * - select:      the highest single choice
  * - multiselect: every positive choice picked, negatives left alone
- * - toggle:      whichever side is worth more
+ * - confirm:     whichever side is worth more
  * - number:      the richest tier
  * - anything else (open-ended, or no `points`): 0
- * @param {import('prompts').PromptObject & { points?: any }} q
+ * @param {Question} q
  * @returns {number}
  */
 function maxScoreOf(q) {
@@ -238,13 +256,12 @@ function maxScoreOf(q) {
             return Math.max(...q.points);
         case 'multiselect':
             return q.points.reduce((sum, p) => sum + Math.max(p, 0), 0);
-        case 'toggle':
         case 'confirm':
             return Math.max(q.points.active ?? 0, q.points.inactive ?? 0);
         case 'number':
             return Math.max(...q.points.map(tier => tier.points));
         default:
-            return 0; // open-ended: text / date
+            return 0; // open-ended: text
     }
 }
 
@@ -252,49 +269,84 @@ function maxScoreOf(q) {
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
+ * clack takes `{ value, label }` options rather than bare strings. Using the
+ * index as the value keeps answers aligned with the `points` arrays.
+ * @param {string[]} choices
+ */
+const toOptions = choices => choices.map((label, value) => ({ value, label }));
+
+/**
+ * `@clack/prompts` doesn't ship a number prompt, so this is a text prompt that
+ * enforces the numeric bounds up front and hands back an actual number.
+ * @param {Question} q
+ * @returns {Promise<number | symbol>} the cancel symbol if the user bailed
+ */
+async function askNumber(q) {
+    const input = await text({
+        message: q.message,
+        placeholder: q.placeholder,
+        validate: value => {
+            const trimmed = (value ?? '').trim();
+            if (trimmed === '' || !Number.isFinite(Number(trimmed))) return 'Numbers only lil bro';
+
+            const n = Number(trimmed);
+            if (q.min != null && n < q.min) return `Has to be at least ${q.min.toLocaleString()}`;
+            if (q.max != null && n > q.max) return `Has to be at most ${q.max.toLocaleString()}`;
+
+            return q.validate?.(trimmed);
+        }
+    });
+
+    return isCancel(input) ? input : Number(input);
+}
+
+/**
+ * Render one question with the matching clack prompt.
+ * @param {Question} q
+ * @returns {Promise<*>} the answer, or clack's cancel symbol if the user bailed
+ */
+function ask(q) {
+    switch (q.type) {
+        case 'select':
+            return select({ message: q.message, options: toOptions(q.choices) });
+        case 'multiselect':
+            // `required: false` so picking nobody stays a valid (0 point) answer.
+            return multiselect({ message: q.message, options: toOptions(q.choices), required: false });
+        case 'confirm':
+            return confirm({
+                message: q.message,
+                initialValue: q.initial,
+                active: q.active,
+                inactive: q.inactive
+            });
+        case 'number':
+            return askNumber(q);
+        default:
+            throw new Error(`The "${q.name}" question has an unknown type "${q.type}".`);
+    }
+}
+
+/**
  * Ask a single question, refusing to move on until it's actually answered.
- * Ctrl+C / Ctrl+D / Esc all resolve the prompt without setting the answer,
- * so we detect that and re-ask instead of letting the user skip.
+ * clack resolves with its cancel symbol on Ctrl+C / Esc instead of throwing,
+ * so we detect that and re-ask rather than letting the user skip.
+ * @param {Question} q
  */
 async function askUntilAnswered(q) {
     while (true) {
-        // `prompts` catches BOTH a real user cancel and an internal crash and
-        // routes both to onCancel, so onCancel can't tell them apart. A genuine
-        // abort/exit always emits a `state` event first (see element.abort());
-        // an internal crash throws before that. So we track whether the user
-        // actually reached an aborted/exited state.
-        let userAborted = false;
-        const response = await prompts(
-            {
-                ...q,
-                onState: state => {
-                    if (state.aborted || state.exited) userAborted = true;
-                }
-            },
-            { onCancel: () => { true } } // handled; we decide what to do below
-        );
+        const value = await ask(q);
+        if (!isCancel(value)) return value;
 
-        // A real answer was given.
-        if (response[q.name] !== undefined) return response;
-
-        // User hit Ctrl+C / Ctrl+D / Esc — nag and re-ask.
-        if (userAborted) {
-            console.log(chalk.redBright('Stop being a baby and answer lil bro'));
-            continue;
-        }
-
-        // No interaction happened, so the prompt itself crashed. Surface it
-        // instead of looping forever and spamming the terminal.
-        throw new Error(`The "${q.name}" prompt failed to run — check its config.`);
+        console.log(chalk.redBright('Stop being a baby and answer lil bro'));
     }
 }
 
 /**
  * Logs the custom message(s) for specific answers of specific questions.
- * @param {import('prompts').PromptObject} question - The question object in the `questions` array
- * @param {object} response - The response object from the user
+ * @param {Question} question - The question object in the `questions` array
+ * @param {*} value - The user's answer to that question
  */
-function customMessage(question, response) {
+function customMessage(question, value) {
     const messages = [
         {
             qName: 'politicalLean',
@@ -328,7 +380,6 @@ function customMessage(question, response) {
     if (matches.length === 0) return;
 
     // select hands back the chosen index, multiselect an array of them.
-    const value = response[question.name];
     const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
 
     for (const m of matches) {
@@ -337,14 +388,14 @@ function customMessage(question, response) {
 }
 
 async function main() {
-    let responses = [];
+    let answers = {};
     let totalScore = 0;
     let maxPossibleScore = 0;
     for (const q of questions) {
-        const response = await askUntilAnswered(q);
-        responses.push(response);
+        const value = await askUntilAnswered(q);
+        answers[q.name] = value;
 
-        const points = scoreOf(q, response[q.name]);
+        const points = scoreOf(q, value);
         totalScore += points;
         maxPossibleScore += maxScoreOf(q);
 
@@ -357,7 +408,7 @@ async function main() {
             //console.log((points > 0 ? chalk.greenBright : chalk.redBright)(label));
         }
 
-        customMessage(q, response);
+        customMessage(q, value);
 
         await wait(1000);
     }
