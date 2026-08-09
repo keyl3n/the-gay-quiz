@@ -13,7 +13,7 @@
     "test": "node --check index.js && eslint .",
     "lint": "eslint .",
     "bundle": "esbuild index.js --bundle --platform=node --outfile=build/bundle.js && terser build/bundle.js -c -m -o build/bundle.min.js",
-    "test:build": "pnpm run bundle && node --build-sea sea-config.test.json"
+    "test:build": "pnpm run bundle && node -e \"require('node:fs').mkdirSync('./dist', { recursive: true }); console.log('Successfully created missing dist folder')\" && node --build-sea sea-config.test.json"
   },
   "packageManager": "pnpm@11.20.0",
   "dependencies": {
