@@ -34,8 +34,8 @@ jobs:
           cache: pnpm
       - run: pnpm ci
       - run: pnpm test
-      - run: pnpm exec esbuild index.js --bundle --platform=node --outfile=build/bundle.js
-      - run: node -e "require('fs').writeFileSync('sea-config.json', JSON.stringify({main:'build/bundle.js',output:'${{ matrix.out }}',disableExperimentalSEAWarning:true,useCodeCache:true}))"
+      - run: pnpm run bundle
+      - run: node -e "require('fs').writeFileSync('sea-config.json', JSON.stringify({main:'build/bundle.min.js',output:'${{ matrix.out }}',disableExperimentalSEAWarning:true,useCodeCache:true}))"
       - run: node --build-sea sea-config.json
       - if: runner.os == 'macOS'
         run: codesign --sign - ${{ matrix.out }}
