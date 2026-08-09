@@ -1,0 +1,6 @@
+{
+    "main": "build/bundle.js",
+    "output": "dist/sea.exe",
+    "disableExperimentalSEAWarning": true,
+    "useCodeCache": true
+}
