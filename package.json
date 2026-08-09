@@ -12,7 +12,7 @@
     "preinstall": "npx only-allow pnpm",
     "test": "node --check index.js && pnpx eslint .",
     "lint": "pnpx eslint .",
-    "bundle": "esbuild index.js --bundle --platform=node --outfile=build/bundle.js && terser build/bundle.js -c -m -o build/bundle.js",
+    "bundle": "esbuild index.js --bundle --platform=node --outfile=build/bundle.js && terser build/bundle.js -c -m -o build/bundle.min.js",
     "build": "pnpm run bundle && node --build-sea sea-config.json"
   },
   "packageManager": "pnpm@11.20.0",
