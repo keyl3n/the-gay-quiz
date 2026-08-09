@@ -1,5 +1,5 @@
 .claude/
 node_modules/
-*.exe
+the-gay-quiz.exe
 build/
 dist/
