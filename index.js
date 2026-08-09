@@ -252,6 +252,35 @@ function maxScoreOf(q) {
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
+ * Holds the window open on the results until Enter is pressed, so a
+ * double-clicked exe doesn't flash the score and vanish.
+ *
+ * Raw mode means the terminal no longer turns Ctrl+C into a SIGINT that kills
+ * us, so the only ways out are Enter, closing the window, or the 3x Ctrl+C
+ * emergency exit above — which is exactly what we want here.
+ */
+function pressEnterToExit() {
+    console.log(chalk.gray('Press enter to exit'));
+
+    return new Promise(resolve => {
+        function onKeypress(_str, key) {
+            // '\r' arrives as `return`, '\n' (piped input) as `enter`.
+            if (!key || (key.name !== 'return' && key.name !== 'enter')) return;
+
+            process.stdin.off('keypress', onKeypress);
+            if (process.stdin.isTTY) process.stdin.setRawMode(false);
+            process.stdin.pause(); // stop holding the event loop open
+            console.log(); // raw mode ate the echo, so end the line ourselves
+            resolve();
+        }
+
+        process.stdin.on('keypress', onKeypress);
+        if (process.stdin.isTTY) process.stdin.setRawMode(true);
+        process.stdin.resume();
+    });
+}
+
+/**
  * Ask a single question, refusing to move on until it's actually answered.
  * Ctrl+C / Ctrl+D / Esc all resolve the prompt without setting the answer,
  * so we detect that and re-ask instead of letting the user skip.
@@ -370,6 +399,8 @@ async function main() {
         title: 'Results',
         float: 'center',
     }));
+
+    await pressEnterToExit();
 }
 
 main().catch(err => {
