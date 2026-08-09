@@ -1,0 +1,6 @@
+{
+    "main": "build/bundle.min.js",
+    "output": "dist/the-gay-quiz.test.exe",
+    "disableExperimentalSEAWarning": true,
+    "useCodeCache": true
+}
