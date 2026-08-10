@@ -206,6 +206,33 @@ const questions = [
         points: [
             2, 1, 1, 1, 0, 1, -5, 0
         ]
+    },
+    {
+        type: 'confirm',
+        name: 'gacha',
+        message: 'Have you ever spent money on a gacha game?',
+        initial: false,
+        active: 'yes',
+        inactive: 'no',
+        points: {
+            active: 3,
+            inactive: 0
+        }
+    },
+    {
+        type: 'number',
+        name: 'monster',
+        message: 'How many cans of Monster can you fit up "there?"',
+        min: 0,
+        max: 20,
+        points: [
+            { below: 1, points: 0 },
+            { below: 3, points: 2 },
+            { below: 5, points: 5 },
+            { below: 10, points: 7 },
+            { below: 15, points: 10 },
+            { below: 20, points: 15 },
+        ]
     }
 ];
 
