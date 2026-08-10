@@ -190,7 +190,7 @@ const questions = [
 
     },
     {
-        type: 'multiselect',
+        type: 'select',
         name: 'favBl?',
         message: 'What is your favorite bl?',
         choices: [
