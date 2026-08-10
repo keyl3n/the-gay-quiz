@@ -128,7 +128,7 @@ const questions = [
             'Tumblr',
             'Twitter'
         ],
-        points: [2, -1, -2, -4, 1, -1, 4, 4, 4]
+        points: [2, -1, -2, -4, 2, -1, 4, 4, 4]
     },
     {
         type: 'select',
