@@ -1,8 +1,8 @@
-import { select, multiselect, confirm, text, isCancel } from "@clack/prompts";
-import { createSpinner } from "nanospinner";
+import { select, multiselect, confirm, text, isCancel, spinner, log, progress } from "@clack/prompts";
 import chalk from "chalk";
 import boxen from "boxen";
 import readline from "readline";
+import randomInRange from './functions/randomInRange.js'
 
 console.clear();
 console.log(boxen(chalk.bold('The Gay Quiz'), { padding: 1.75, margin: 2, borderStyle: 'double', borderColor: 'blueBright', title: 'AndySoft presents', float: true }));
@@ -145,8 +145,7 @@ const questions = [
     {
         type: 'number',
         name: 'minCash',
-        message: `What's the MINIMUM amount of money you would accept to get cracked?\n${chalk.gray('(You can choose anyone to crack you)')}`,
-        placeholder: '100',
+        message: `What's the MINIMUM amount of money you would accept to get cracked? ${chalk.gray('(You can choose anyone to crack you)')}`,
         min: 0,
         max: 1000000000000,
         points: [
@@ -366,7 +365,7 @@ async function askUntilAnswered(q) {
         const value = await ask(q);
         if (!isCancel(value)) return value;
 
-        console.log(chalk.redBright('Stop being a baby and answer lil bro'));
+        log.message('Stop being a baby and answer lil bro', { symbol: chalk.redBright('✘') });
     }
 }
 
@@ -381,27 +380,27 @@ function customMessage(question, value) {
             qName: 'politicalLean',
             // we only need one of these for it to show a custom message
             reqAnswers: ['Far-left', 'Far-right'],
-            msg: chalk.yellowBright('You aren\'t tuff lil bro')
+            msg: 'You aren\'t tuff lil bro'
         },
         {
             qName: 'whatBodyType',
             reqAnswers: ['Cub', 'Otter'],
-            msg: chalk.yellowBright('I know what you are...')
+            msg: 'I know what you are...'
         },
         {
             qName: 'favBl?',
             reqAnswers: ['Jinx', 'Killing Stalking', 'Yarichin B Club'],
-            msg: chalk.yellowBright('Interesting... (not judging tho)')
+            msg: 'Interesting... (not judging tho)'
         },
         {
             qName: 'favBl?',
             reqAnswers: ['Citrus'],
-            msg: chalk.yellowBright('That\'s girls love you idiot not boys love')
+            msg: 'That\'s girls love you idiot not boys love'
         },
         {
             qName: 'favBl?',
             reqAnswers: ['WHAT ARE THESE???'],
-            msg: chalk.yellowBright('You don\'t wanna know... oh the horrors...')
+            msg: 'You don\'t wanna know... oh the horrors...'
         }
     ];
 
@@ -412,7 +411,7 @@ function customMessage(question, value) {
     const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
 
     for (const m of matches) {
-        if (m.reqAnswers.some(a => answers.includes(a))) console.log(m.msg);
+        if (m.reqAnswers.some(a => answers.includes(a))) log.warn(m.msg);
     }
 }
 
@@ -420,24 +419,38 @@ async function main() {
     let answers = {};
     let totalScore = 0;
     let maxPossibleScore = 0;
+    let i = 0;
+
     for (const q of questions) {
+        i++;
         const value = await askUntilAnswered(q);
         answers[q.name] = value;
 
         const points = scoreOf(q, value);
         totalScore += points;
         maxPossibleScore += maxScoreOf(q);
-
-        const spinner = createSpinner('Processing answer...').start();
+        const s = spinner();
+        s.start('Processing answer...');
         await wait(1500);
-        spinner.stop(); // no args -> clears the line so nothing is left behind
-
-        if (points !== 0) {
-            const label = `${points > 0 ? '+' : ''}${points} point${Math.abs(points) === 1 ? '' : 's'}`;
-            //console.log((points > 0 ? chalk.greenBright : chalk.redBright)(label));
-        }
+        s.stop('Answer processed');
 
         customMessage(q, value);
+
+        // last question only
+        if (i == questions.length) {
+            // `progress` is a spinner underneath, so it has to be started before
+            // `advance` has a line to draw the bar on — and stopped afterwards.
+            const p = progress({ max: 100 });
+            p.start('Gathering results');
+            await wait(randomInRange(3000, 5000));
+            p.advance(randomInRange(20, 40), 'Compiling chart');
+            await wait(randomInRange(2500, 4000));
+            p.advance(randomInRange(20, 40), 'Injecting woke mind virus');
+            await wait(randomInRange(2000, 3500));
+            p.advance(100, 'Injecting woke mind virus'); // clamped to max, so the bar always fills
+            await wait(randomInRange(500, 1000));
+            p.stop('Generated results');
+        }
 
         await wait(1000);
     }
@@ -455,6 +468,6 @@ async function main() {
 }
 
 main().catch(err => {
-    console.error(chalk.redBright(err.message));
+    log.error(String(err));
     process.exit(1);
 });
