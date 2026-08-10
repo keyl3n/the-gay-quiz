@@ -1,6 +1,6 @@
 {
   "name": "the-gay-quiz",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "Are you gay? Cause I am",
   "license": "ISC",
   "author": "k3ylen",
@@ -15,12 +15,11 @@
     "bundle": "esbuild index.js --bundle --platform=node --outfile=build/bundle.js && terser build/bundle.js -c -m -o build/bundle.min.js",
     "test:build": "pnpm run bundle && node -e \"require('node:fs').mkdirSync('./dist', { recursive: true }); console.log('Successfully created missing dist folder')\" && node --build-sea sea-config.test.json"
   },
-  "packageManager": "pnpm@11.20.0",
+  "packageManager": "pnpm@11.21.0+sha512.521705bce689924eac72f5a3587122f362689ef6571e55ba80076fd637c11132ecffada26fad4ea79c485bfddbfd3d5a2a5b05805a77e893de71ec8a6cca3bb1",
   "dependencies": {
+    "@clack/prompts": "^1.7.0",
     "boxen": "^8.0.1",
-    "chalk": "^6.0.0",
-    "nanospinner": "^1.2.2",
-    "prompts": "^2.4.2"
+    "chalk": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
