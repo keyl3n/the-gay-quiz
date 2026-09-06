@@ -218,7 +218,35 @@ const questions = [
             { below: 15, points: 14 },
             { below: 20, points: 16 },
         ]
-    }
+    },
+    {
+        type: 'confirm',
+        name: 'feelingPretty',
+        message: 'Do you like feeling pretty?',
+        initial: false,
+        active: 'yes',
+        inactive: 'no',
+        points: {
+            active: 6,
+            inactive: 0
+        }
+    },
+    {
+        type: 'select',
+        name: 'killAndMarry',
+        message: 'You have to marry one of these people and kill the rest. Who do you choose to marry?',
+        choices: [
+            'Talcility',
+            'Wasshoi',
+            'Shade',
+            'BMC',
+            'Keylen',
+            'LaziestDonut',
+            'Ambush',
+            'Verity'
+        ],
+        points: [5, 3, 5, 6, 6, 5, 3, 0]
+    },
 ];
 
 /**
