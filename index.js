@@ -93,21 +93,6 @@ const questions = [
         points: [3, 3, 3, 3, 3, 3, 3, 3, -3],
     },
     {
-        type: 'select',
-        name: 'politicalLean',
-        message: 'Which of these terms best describe your political beliefs?',
-        choices: [
-            'Far-left',
-            'Left',
-            'Center-left',
-            'Center',
-            'Center-right',
-            'Right',
-            'Far-right'
-        ],
-        points: [2, 3, 2, 1, 0, -1, 0],
-    },
-    {
         type: 'number',
         name: 'limit',
         message: `For each ${chalk.italic('y')}, ${chalk.italic('x')} is being divided by 2. What is the limit of ${chalk.italic('x')} as ${chalk.italic('y')} approaches ∞?`,
