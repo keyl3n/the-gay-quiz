@@ -63,7 +63,7 @@ const questions = [
             'Wasshoi'
         ],
         // One array entry per choice, aligned by index.
-        points: [0, 1, 2, 4, 5, 8],
+        points: [0, 1, 2, 4, 5, 10],
     },
     {
         type: 'confirm',
@@ -72,7 +72,7 @@ const questions = [
         initial: true,
         active: 'yes',
         inactive: 'no',
-        points: { active: 10, inactive: 0 },
+        points: { active: 15, inactive: 0 },
     },
     {
         type: 'multiselect',
@@ -185,7 +185,7 @@ const questions = [
             "None of the above fit me",
         ],
         points: [
-            2, 5, 5, 1, 0
+            2, 4, 4, 2, 0
         ]
 
     },
@@ -227,11 +227,11 @@ const questions = [
         max: 20,
         points: [
             { below: 1, points: 0 },
-            { below: 3, points: 2 },
-            { below: 5, points: 5 },
-            { below: 10, points: 7 },
-            { below: 15, points: 10 },
-            { below: 20, points: 15 },
+            { below: 3, points: 5 },
+            { below: 5, points: 8 },
+            { below: 10, points: 12 },
+            { below: 15, points: 14 },
+            { below: 20, points: 16 },
         ]
     }
 ];
