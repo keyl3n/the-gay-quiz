@@ -272,9 +272,22 @@ const questions = [
             'OBLIVION',
             'Memory',
             'Dreammetric',
-            'Oppression'
+            'Oppression',
+            'Fem : Kosmic'
         ],
-        points: [6, 3, 4, 8, 5]
+        points: [6, 3, 4, 8, 5, 4]
+    },
+    {
+        type: 'confirm',
+        name: 'scarier',
+        message: 'What is scarier?',
+        initial: true,
+        active: 'Verity',
+        inactive: 'Captain Clark',
+        points: {
+            active: 4,
+            inactive: 3
+        }
     },
 ];
 
