@@ -289,6 +289,17 @@ const questions = [
             inactive: 3
         }
     },
+    {
+        type: 'select',
+        name: 'scoreType',
+        message: 'What kind of score are you trying to get?',
+        choices: [
+            'i\'m answering honestly',
+            'high score',
+            'low score'
+        ],
+        points: [0, 1, 3]
+    },
 ];
 
 /**
