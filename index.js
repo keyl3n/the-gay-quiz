@@ -249,22 +249,6 @@ const questions = [
     },
     {
         type: 'select',
-        name: 'killAndMarry',
-        message: 'You have to marry one of these people and kill the rest. Who do you choose to marry?',
-        choices: [
-            'Talcility',
-            'Wasshoi',
-            'Shade',
-            'BMC',
-            'Keylen',
-            'LaziestDonut',
-            'Ambush',
-            'Verity'
-        ],
-        points: [5, 3, 5, 6, 6, 5, 3, 0]
-    },
-    {
-        type: 'select',
         name: 'solsRngAura',
         message: 'Pick a Sol\'s RNG aura to instantly obtain.',
         choices: [
