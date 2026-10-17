@@ -508,7 +508,6 @@ function customMessage(question, value) {
         },
         {
             qName: 'nananananightmare',
-            reqAnswers: ['Yes papa'],
             dih: true,
             msg: 'boi you\'re gonna have a... na-na-na-na-nightmare'
         }
@@ -518,6 +517,7 @@ function customMessage(question, value) {
     if (matches.length === 0) return;
 
     if (matches[0]['dih'] === true) {
+        console.log(typeOf(value));
         if (value === true)
             log.warn(m.msg);
         return;
