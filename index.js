@@ -492,6 +492,11 @@ function customMessage(question, value) {
             msg: 'I know what you are...'
         },
         {
+            qName: 'whatBodyType',
+            reqAnswers: ['Why are you asking me this'],
+            msg: 'Because im lustful 4 u.'
+        },
+        {
             qName: 'favBl?',
             reqAnswers: ['Jinx', 'Killing Stalking', 'Yarichin B Club'],
             msg: 'Interesting... (not judging tho)'
