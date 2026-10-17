@@ -509,7 +509,8 @@ function customMessage(question, value) {
         {
             qName: 'nananananightmare',
             dih: true,
-            msg: 'boi you\'re gonna have a... na-na-na-na-nightmare'
+            msg: 'boi you\'re gonna have a... na-na-na-na-nightmare',
+            msgifitwasfalseboi: 'That\'s not very 67 of you. Boi.'
         }
     ];
 
@@ -517,8 +518,15 @@ function customMessage(question, value) {
     if (matches.length === 0) return;
 
     if (matches[0]['dih'] === true) {
-        if (value === true)
-            log.warn(matches[0].msg);
+        if (value === true) {
+            log.warn(matches[0].msg);}else                                  {
+
+                                             // Tiki tiki phonk
+
+log.warn(matches[0].msgifitwasfalseboi);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+        }
         return;
     }
 
