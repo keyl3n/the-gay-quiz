@@ -298,7 +298,7 @@ const questions = [
         initial: true,
         active: 'yes',
         inactive: 'no',
-        points: { active: 15, inactive: 0 },
+        points: { active: 7, inactive: -2 },
     },
     {
         type: 'select',
