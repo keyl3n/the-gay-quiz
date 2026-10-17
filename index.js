@@ -568,9 +568,9 @@ async function main() {
         totalScore += points;
         maxPossibleScore += maxScoreOf(q);
         const s = spinner();
-        s.start('Processing answer...');
+        s.start('Recording answer...');
         await wait(1500);
-        s.stop('Answer processed');
+        s.stop('Answer recorded');
 
         customMessage(q, value);
 
