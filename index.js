@@ -80,18 +80,20 @@ const questions = [
         name: 'whoToCrack',
         message: 'Out of all these people, WHO are you CRACKING?',
         choices: [
-            'Shade',
-            'Stormy',
+            'keylen',
             'bmc',
+            'ficks',
             'Wasshoi',
             'I_HaF',
             'phoenix',
             'LaziestDonut',
+            'shd',
+            'val',
             'Talcility',
             'Claire'
         ],
         // Points for each selected choice are summed together.
-        points: [3, 3, 3, 3, 3, 3, 3, 3, -3],
+        points: [3, 3, 3, 2, 3, 3, 3, 3, -3, 3, -3],
     },
     {
         type: 'number',
