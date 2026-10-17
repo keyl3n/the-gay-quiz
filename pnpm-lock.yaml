@@ -15,8 +15,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       chalk:
-        specifier: ^6.0.0
-        version: 6.0.0
+        specifier: ^6.0.1
+        version: 6.0.1
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -331,8 +331,8 @@ packages:
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
-  chalk@6.0.0:
-    resolution: {integrity: sha512-2uNTXIuTTxk7ciZgAU1BQcgnchcG0xXnrs6jzkQfj9SsRa9M2s5zE8WT96hS6KmG4MzWHSrvH43DF1m4XRkrFg==}
+  chalk@6.0.1:
+    resolution: {integrity: sha512-/Ce6KNm3vIbWdMlNna6RVIZ/ICQxnJxCicet5LBKK9ZffBkqzDw0xh9EiKSljdRtiIQ1S1z4YgcscUUGzNCWrA==}
     engines: {node: '>=22'}
 
   cli-boxes@4.0.1:
@@ -803,7 +803,7 @@ snapshots:
 
   boxen@9.0.0:
     dependencies:
-      chalk: 6.0.0
+      chalk: 6.0.1
       cli-boxes: 4.0.1
       slice-ansi: 9.0.1
       string-width: 8.3.0
@@ -817,7 +817,7 @@ snapshots:
 
   buffer-from@1.1.2: {}
 
-  chalk@6.0.0: {}
+  chalk@6.0.1: {}
 
   cli-boxes@4.0.1: {}
 
