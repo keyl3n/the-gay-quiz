@@ -296,7 +296,7 @@ const questions = [
         name: 'nananananightmare',
         message: 'Do you really wanna be my friend?',
         initial: true,
-        active: 'Yes',
+        active: 'Yes papa',
         inactive: 'No thatd be too much of a na-na-na-na-nightmare',
         points: { active: 7, inactive: -2 },
     },
@@ -508,7 +508,7 @@ function customMessage(question, value) {
         },
         {
             qName: 'nananananightmare',
-            reqAnswers: ['Yes'],
+            reqAnswers: ['Yes papa'],
             msg: 'boi you\'re gonna have a... na-na-na-na-nightmare'
         }
     ];
