@@ -518,14 +518,13 @@ function customMessage(question, value) {
     if (matches.length === 0) return;
 
     if (matches[0]['dih'] === true) {
-        console.log("Stop saying 67");
-        console.log(value);
+        if (value === true)
+            log.warn(m.msg);
+        return;
     }
 
     // select hands back the chosen index, multiselect an array of them.
     const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
-    console.log(matches);
-    console.log(answers);
 
     for (const m of matches) {
         if (m.reqAnswers.some(a => answers.includes(a))) log.warn(m.msg);
