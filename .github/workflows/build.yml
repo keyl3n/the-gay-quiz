@@ -19,11 +19,12 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            out: thegayquiz-linux-x64
+            target: linux-x64
           - os: macos-latest
-            out: thegayquiz-macos-arm64
+            target: macos-arm64
           - os: windows-latest
-            out: thegayquiz-win-x64.exe
+            target: win-x64
+            ext: .exe
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -33,17 +34,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 26
+      - id: name
+        shell: bash
+        env:
+          INPUT_VERSION: ${{inputs.version}}
+        run: |
+          v="${INPUT_VERSION:-$(node -p "require('./package.json').version")}"
+          echo "out=thegayquiz-v$v-${{ matrix.target }}${{ matrix.ext }}" >> "$GITHUB_OUTPUT"
       - run: pnpm ci
       - run: pnpm test
       - run: pnpm run bundle
-      - run: node -e "require('fs').writeFileSync('sea-config.json', JSON.stringify({main:'build/bundle.min.js',output:'${{ matrix.out }}',disableExperimentalSEAWarning:true,useCodeCache:true}))"
+      - run: node -e "require('fs').writeFileSync('sea-config.json', JSON.stringify({main:'build/bundle.min.js',output:'${{ steps.name.outputs.out }}',disableExperimentalSEAWarning:true,useCodeCache:true}))"
       - run: node --build-sea sea-config.json
       - if: runner.os == 'macOS'
-        run: codesign --sign - ${{ matrix.out }}
+        run: codesign --sign - ${{ steps.name.outputs.out }}
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.out }}
-          path: ${{ matrix.out }}
+          name: ${{ steps.name.outputs.out }}
+          path: ${{ steps.name.outputs.out }}
 
   release:
     if: github.event_name == 'workflow_dispatch' && inputs.version != ''
