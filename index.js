@@ -581,9 +581,11 @@ async function main() {
             const p = progress({ max: 100 });
             p.start('Gathering results');
             await wait(randomInRange(3000, 5000));
-            p.advance(randomInRange(20, 40), 'Compiling chart');
+            p.advance(randomInRange(20, 30), 'Compiling chart');
             await wait(randomInRange(2500, 4000));
-            p.advance(randomInRange(20, 40), 'Injecting woke mind virus');
+            p.advance(randomInRange(20, 30), 'Injecting woke mind virus');
+            await wait(randomInRange(2000, 3500));
+            p.advance(randomInRange(20, 30), 'Contacting Wasshoi...');
             await wait(randomInRange(2000, 3500));
             p.advance(100, 'Injecting woke mind virus'); // clamped to max, so the bar always fills
             await wait(randomInRange(500, 1000));
