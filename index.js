@@ -284,7 +284,7 @@ const questions = [
             'high score',
             'low score'
         ],
-        points: [0, 1, 3]
+        points: [0, -20, 3]
     },
 ];
 
