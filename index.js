@@ -517,7 +517,7 @@ function customMessage(question, value) {
     if (matches.length === 0) return;
 
     if (matches[0]['dih'] === true) {
-        console.log(typeOf(value));
+        console.log(typeof(value));
         if (value === true)
             log.warn(m.msg);
         return;
