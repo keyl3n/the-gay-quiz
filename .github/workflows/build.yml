@@ -53,6 +53,7 @@ jobs:
       contents: write
     env:
       GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
       TAG: v${{ inputs.version }}
     steps:
       - uses: actions/checkout@v4
@@ -67,21 +68,43 @@ jobs:
       - name: Build changelog from commits since last release
         run: |
           prev=$(gh release list --limit 1 --exclude-drafts --json tagName --jq '.[0].tagName // empty')
+
+          # oldest first: sha, author (GitHub login, else commit author name), is-login flag, subject
+          fmt='.[] | select((.parents | length) == 1) | [.sha[0:7], (.author.login // .commit.author.name), (.author.login != null), (.commit.message | split("\n")[0])] | join("\t")'
           if [ -n "$prev" ]; then
             echo "Previous release: $prev"
-            range="$prev..HEAD"
-            compare="**Full changelog:** ${{ github.server_url }}/${{ github.repository }}/compare/$prev...$TAG"
+            commits=$(gh api --paginate "repos/$REPO/compare/$prev...${{ github.sha }}" --jq ".commits | $fmt")
+            compare="**Full changelog:** ${{ github.server_url }}/$REPO/compare/$prev...$TAG"
           else
             echo "No previous release, listing all commits"
-            range=""
+            commits=$(gh api --paginate "repos/$REPO/commits?sha=${{ github.sha }}" --jq "$fmt" | tac)
             compare=""
+          fi
+
+          # first-time contributors: authors in this release with no commits reachable from the previous release
+          newcomers=""
+          if [ -n "$prev" ]; then
+            for login in $(echo "$commits" | awk -F'\t' '$3 == "true" && $2 !~ /\[bot\]$/ { print $2 }' | awk '!seen[$0]++'); do
+              if [ "$(gh api "repos/$REPO/commits?sha=$prev&author=$login&per_page=1" --jq length)" = "0" ]; then
+                newcomers="$newcomers- @$login"$'\n'
+              fi
+            done
           fi
 
           {
             echo "## Changes"
             echo
-            git log --no-merges --reverse --pretty=format:'- %s (%h)' $range
-            echo
+            echo "$commits" | while IFS=$'\t' read -r sha author is_login subject; do
+              [ -z "$sha" ] && continue
+              if [ "$is_login" = "true" ]; then by="@$author"; else by="$author"; fi
+              echo "- $subject ($sha) by $by"
+            done
+            if [ -n "$newcomers" ]; then
+              echo
+              echo "## First-time contributors"
+              echo
+              printf '%s' "$newcomers"
+            fi
             if [ -n "$compare" ]; then echo; echo "$compare"; fi
           } > notes.md
 
