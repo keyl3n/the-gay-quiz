@@ -509,12 +509,17 @@ function customMessage(question, value) {
         {
             qName: 'nananananightmare',
             reqAnswers: ['Yes papa'],
+            dih: true,
             msg: 'boi you\'re gonna have a... na-na-na-na-nightmare'
         }
     ];
 
     const matches = messages.filter(m => m.qName == question.name);
     if (matches.length === 0) return;
+
+    if (matches[0]['dih'] === true) {
+        console.log("Stop saying 67")
+    }
 
     // select hands back the chosen index, multiselect an array of them.
     const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
