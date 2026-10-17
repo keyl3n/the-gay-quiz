@@ -292,6 +292,7 @@ const questions = [
         points: [-2, -2, -2, 3, -2, -2, -10, 1, -5]
     },
     {
+        type: 'confirm',
     },
     {
         type: 'select',
