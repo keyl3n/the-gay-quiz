@@ -277,6 +277,22 @@ const questions = [
     },
     {
         type: 'select',
+        name: 'veritysAwesomeGame1',
+        message: '"Hey, it\'s me, it\'s ______',
+        choices: [
+            'Cruelty',
+            'Falsity',
+            'Eclipsity',
+            'Verity',
+            'Obesity',
+            'Moggity',
+            'Curiosity',
+            'I\'m too straight for this'
+        ],
+        points: [-2, -2, -2, 3, -2, -2, -10, 1, -5]
+    },
+    {
+        type: 'select',
         name: 'scoreType',
         message: 'What kind of score are you trying to get?',
         choices: [
