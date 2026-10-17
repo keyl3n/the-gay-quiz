@@ -518,7 +518,8 @@ function customMessage(question, value) {
     if (matches.length === 0) return;
 
     if (matches[0]['dih'] === true) {
-        console.log("Stop saying 67")
+        console.log("Stop saying 67");
+        console.log(value);
     }
 
     // select hands back the chosen index, multiselect an array of them.
