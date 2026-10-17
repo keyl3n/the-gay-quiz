@@ -294,7 +294,7 @@ const questions = [
     {
         type: 'confirm',
         name: 'nananananightmare',
-        message: 'Do you like BOYS?',
+        message: 'Do you really wanna be my friend?',
     },
     {
         type: 'select',
