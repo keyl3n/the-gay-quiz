@@ -211,7 +211,7 @@ const questions = [
         name: 'monster',
         message: 'How many cans of Monster can you fit up "there?"',
         min: 0,
-        max: 20,
+        max: 67,
         points: [
             { below: 1, points: 0 },
             { below: 3, points: 5 },
@@ -278,7 +278,7 @@ const questions = [
     {
         type: 'select',
         name: 'veritysAwesomeGame1',
-        message: '"Hey, it\'s me, it\'s ______',
+        message: '"Hey, it\'s me, it\'s ______"',
         choices: [
             'Cruelty',
             'Falsity',
