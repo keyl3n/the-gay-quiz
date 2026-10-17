@@ -51,7 +51,7 @@ process.on('SIGINT', registerCtrlC);
  * @type {Question[]}
  */
 const questions = [
-    {
+    /*{
         type: 'select',
         name: 'femininity',
         message: 'How much of a FEMBOY are you?',
@@ -290,7 +290,7 @@ const questions = [
             'I\'m too straight for this'
         ],
         points: [-2, -2, -2, 3, -2, -2, -10, 1, -5]
-    },
+    },*/
     {
         type: 'confirm',
         name: 'nananananightmare',
