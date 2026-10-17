@@ -296,6 +296,7 @@ const questions = [
         name: 'nananananightmare',
         message: 'Do you really wanna be my friend?',
         initial: true,
+        active: 'yes',
     },
     {
         type: 'select',
