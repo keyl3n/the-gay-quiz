@@ -169,9 +169,10 @@ const questions = [
             "Otter",
             "Twink",
             "None of the above fit me",
+            "Why are you asking me this"
         ],
         points: [
-            2, 4, 4, 2, 0
+            2, 4, 4, 2, 0, -1
         ]
 
     },
