@@ -486,38 +486,45 @@ function customMessage(question, value) {
             qName: 'politicalLean',
             // we only need one of these for it to show a custom message
             reqAnswers: ['Far-left', 'Far-right'],
-            msg: 'You aren\'t tuff lil bro'
+            msg: 'You aren\'t tuff lil bro',
+            type: log.warn
         },
         {
             qName: 'whatBodyType',
             reqAnswers: ['Cub', 'Otter'],
-            msg: 'I know what you are...'
+            msg: 'I know what you are...',
+            type: log.info
         },
         {
             qName: 'whatBodyType',
             reqAnswers: ['Why are you asking me this'],
-            msg: 'Because im lustful 4 u.'
+            msg: 'Because im lustful 4 u.',
+            type: log.error
         },
         {
             qName: 'favBl?',
             reqAnswers: ['Jinx', 'Killing Stalking', 'Yarichin B Club'],
-            msg: 'Interesting... (not judging tho)'
+            msg: 'Interesting... (not judging tho)',
+            type: log.warn
         },
         {
             qName: 'favBl?',
             reqAnswers: ['Citrus'],
-            msg: 'That\'s girls love you idiot not boys love'
+            msg: 'That\'s girls love you idiot not boys love',
+            type: log.error
         },
         {
             qName: 'favBl?',
             reqAnswers: ['WHAT ARE THESE???'],
-            msg: 'You don\'t wanna know... oh the horrors...'
+            msg: 'You don\'t wanna know... oh the horrors...',
+            type: log.warn
         },
         {
             qName: 'nananananightmare',
             dih: true,
             msg: 'boi you\'re gonna have a... na-na-na-na-nightmare',
-            msgifitwasfalseboi: 'That\'s not very 67 of you. Boi.'
+            msgifitwasfalseboi: 'That\'s not very 67 of you. Boi.',
+            type: log.warn
         }
     ];
 
@@ -526,11 +533,11 @@ function customMessage(question, value) {
 
     if (matches[0]['dih'] === true) {
         if (value === true) {
-            log.warn(matches[0].msg);}else                                  {
+            matches[0].type(matches[0].msg);}else                                  {
 
                                              // Tiki tiki phonk
 
-log.warn(matches[0].msgifitwasfalseboi);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+matches[0].type(matches[0].msgifitwasfalseboi);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 // I'm proud of this -bmc
     ;;    ;   ;;
@@ -551,7 +558,7 @@ log.warn(matches[0].msgifitwasfalseboi);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
 
     for (const m of matches) {
-        if (m.reqAnswers.some(a => answers.includes(a))) log.warn(m.msg);
+        if (m.reqAnswers.some(a => answers.includes(a))) matches[0].type(m.msg);
     }
 }
 
