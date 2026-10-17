@@ -525,6 +525,16 @@ function customMessage(question, value) {
 
 log.warn(matches[0].msgifitwasfalseboi);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+// I'm proud of this -bmc
+    ;;    ;   ;;
+    ;;    ;   ;;  ;;
+    ;;    ;   ;;  ;;
+          ;
+  ;;;;;;;;;;;;;;;;;;;;
+          ;
+  ;;  ;;  ;  ;;
+  ;;  ;;  ;  ;;
+  ;;  ;;  ;  ;; ;;;;;;
 
         }
         return;
