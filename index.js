@@ -293,7 +293,7 @@ const questions = [
     },
     {
         type: 'confirm',
-        name: 'likesBoys',
+        name: 'nananananightmare',
     },
     {
         type: 'select',
