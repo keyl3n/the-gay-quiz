@@ -516,10 +516,10 @@ function customMessage(question, value) {
     const matches = messages.filter(m => m.qName == question.name);
     if (matches.length === 0) return;
 
-    console.log(matches);
-
     // select hands back the chosen index, multiselect an array of them.
     const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
+    console.log(matches);
+    console.log(answers);
 
     for (const m of matches) {
         if (m.reqAnswers.some(a => answers.includes(a))) log.warn(m.msg);
