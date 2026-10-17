@@ -292,6 +292,15 @@ const questions = [
         points: [-2, -2, -2, 3, -2, -2, -10, 1, -5]
     },
     {
+        type: 'confirm',
+        name: 'nananananightmare',
+        message: 'Do you really wanna be my friend?',
+        initial: true,
+        active: 'Yes papa',
+        inactive: 'No thatd be too much of a na-na-na-na-nightmare',
+        points: { active: 7, inactive: -2 },
+    },
+    {
         type: 'select',
         name: 'scoreType',
         message: 'What kind of score are you trying to get?',
@@ -496,11 +505,30 @@ function customMessage(question, value) {
             qName: 'favBl?',
             reqAnswers: ['WHAT ARE THESE???'],
             msg: 'You don\'t wanna know... oh the horrors...'
+        },
+        {
+            qName: 'nananananightmare',
+            dih: true,
+            msg: 'boi you\'re gonna have a... na-na-na-na-nightmare',
+            msgifitwasfalseboi: 'That\'s not very 67 of you. Boi.'
         }
     ];
 
     const matches = messages.filter(m => m.qName == question.name);
     if (matches.length === 0) return;
+
+    if (matches[0]['dih'] === true) {
+        if (value === true) {
+            log.warn(matches[0].msg);}else                                  {
+
+                                             // Tiki tiki phonk
+
+log.warn(matches[0].msgifitwasfalseboi);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+        }
+        return;
+    }
 
     // select hands back the chosen index, multiselect an array of them.
     const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
