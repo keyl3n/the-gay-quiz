@@ -3,9 +3,10 @@ import chalk from "chalk";
 import boxen from "boxen";
 import readline from "readline";
 import randomInRange from './functions/randomInRange.js'
+import version from './functions/version.js';
 
 console.clear();
-console.log(boxen(chalk.bold('The Gay Quiz'), { padding: 1.75, margin: 2, borderStyle: 'double', borderColor: 'blueBright', title: 'AndySoft presents', float: true }));
+console.log(boxen(chalk.bold('The Gay Quiz'), { padding: 1.75, margin: 2, borderStyle: 'double', borderColor: 'blueBright', title: 'AndySoft presents', float: true, footer: `v${version}`, footerAlignment: 'right' }));
 
 // --- Emergency exit: 3 Ctrl+C presses within 1 second quits the script. ---
 let ctrlCTimes = [];
