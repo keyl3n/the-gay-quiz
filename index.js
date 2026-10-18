@@ -596,7 +596,7 @@ async function main() {
             await wait(randomInRange(2000, 3500));
             p.advance(randomInRange(20, 30), 'Contacting Wasshoi...');
             await wait(randomInRange(2000, 3500));
-            p.advance(100, 'Injecting woke mind virus'); // clamped to max, so the bar always fills
+            p.advance(100, 'Contacting Wasshoi...'); // clamped to max, so the bar always fills
             await wait(randomInRange(500, 1000));
             p.stop('Generated results');
         }
