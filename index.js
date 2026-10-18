@@ -214,14 +214,14 @@ const questions = [
         name: 'monster',
         message: 'How many cans of Monster can you fit up "there?"',
         min: 0,
-        max: 67,
+        max: 20,
         points: [
             { below: 1, points: 0 },
             { below: 3, points: 5 },
             { below: 5, points: 8 },
             { below: 10, points: 12 },
             { below: 15, points: 14 },
-            { below: 20, points: 16 },
+            { below: 21, points: 16 },
         ]
     },
     {
