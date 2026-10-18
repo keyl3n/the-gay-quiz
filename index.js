@@ -4,6 +4,7 @@ import boxen from "boxen";
 import readline from "readline";
 import randomInRange from './functions/randomInRange.js'
 import version from './functions/version.js';
+import { note } from "@clack/prompts";
 
 console.clear();
 console.log(boxen(chalk.bold('The Gay Quiz'), { padding: 1.75, margin: 2, borderStyle: 'double', borderColor: 'blueBright', title: 'AndySoft presents', float: true, footer: `v${version}`, footerAlignment: 'right' }));
@@ -483,6 +484,12 @@ async function askUntilAnswered(q) {
 function customMessage(question, value) {
     const messages = [
         {
+            qName: 'femininity',
+            reqAnswers: ['Wasshoi'],
+            isNote: true,
+            note: { title: 'Message from Andy', content: 'Whats ur @' }
+        },
+        {
             qName: 'politicalLean',
             // we only need one of these for it to show a custom message
             reqAnswers: ['Far-left', 'Far-right'],
@@ -530,6 +537,23 @@ function customMessage(question, value) {
 
     const matches = messages.filter(m => m.qName == question.name);
     if (matches.length === 0) return;
+    
+    const answers = question.choices
+        ? (Array.isArray(value) ? value : [value]).map(i => question.choices[i])
+        : [];
+
+    if (matches[0].isNote == true && matches[0].reqAnswers.some(a => answers.includes(a))) {
+        let noteTitle;
+        let noteMessage;
+        if (typeof matches[0].note.title === 'string' && matches[0].note.title.length > 0) noteTitle = matches[0].note.title;
+        if (typeof matches[0].note.content === 'string' && matches[0].note.content.length > 0) { noteMessage = matches[0].note.content; }
+        else {
+            log.error('isNote was true but there was no note content. If you\'re seeing this message it\'s because of a bug or an error')
+            return;
+        }
+
+        note(noteMessage, noteTitle || undefined)
+    }
 
     if (matches[0]['dih'] === true) {
         if (value === true) {
@@ -554,11 +578,10 @@ matches[0].type(matches[0].msgifitwasfalseboi);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         return;
     }
 
-    // select hands back the chosen index, multiselect an array of them.
-    const answers = (Array.isArray(value) ? value : [value]).map(i => question.choices[i]);
-
     for (const m of matches) {
-        if (m.reqAnswers.some(a => answers.includes(a))) matches[0].type(m.msg);
+        // note-only entries (isNote) have no msg/type to log
+        if (!m.msg || !m.type) continue;
+        if (m.reqAnswers.some(a => answers.includes(a))) m.type(m.msg);
     }
 }
 
